@@ -4,7 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
-def get_conversation_chain(vectorstore):
+def get_conversation_chain(retriever):
     llm = ChatOpenAI(
         temperature =0,
         model_name="gpt-3.5-turbo"
@@ -16,7 +16,7 @@ def get_conversation_chain(vectorstore):
 
     chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
-        retriever=vectorstore.as_retriever(),
+        retriever=retriever,
         memory=memory
     )
     return chain

@@ -4,7 +4,8 @@ import shutil
 from src.loader import get_pdf_text
 from src.text_spliter import text_spliter
 from src.vector_store import get_vectorstore
-
+from src.retriever import get_retriever
+from src.llm import get_conversation_chain
 # Define the folder where PDFs will be stored 
 UPLOAD_DIR = "data"
 
@@ -28,7 +29,17 @@ def main():
     st.set_page_config(page_title="Chat With Multiple PDFs", page_icon=":books:")
     
     st.header("Chat with multiple PDFs :books:")
-    st.text_input("Ask a question about your documents:")
+    user_question = st.text_input("Ask a question about your documents:")
+    if user_question and st.session_state.conversation:
+        response = st.session_state.conversation({'question':user_question})
+        st.session_state.chat_history = response['chat_history']
+
+        for i,msg in enumerate(st.session_state.chat_history):
+            if i %2 ==0:
+                st.markdown(f"**YOU:** {msg.content}")
+            else:
+                st.markdown(f"**Bot:** {msg.content}")
+
 
     with st.sidebar:
         st.subheader("Your Documents")
@@ -49,8 +60,14 @@ def main():
                 st.write(text_chunks)
 
 
-                # create vector store
+                # generate vector store
                 vectorstore = get_vectorstore(text_chunks)
+
+                #get retriever 
+                retriever = get_retriever(vectorstore)
+
+                # create conversation chain with memory
+                st.session_state.conversation = get_conversation_chain(retriever)
 
 
 
