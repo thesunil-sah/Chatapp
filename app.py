@@ -2,6 +2,7 @@ import streamlit as st
 import os 
 import shutil
 from src.loader import get_pdf_text
+from src.text_spliter import text_spliter
 
 # Define the folder where PDFs will be stored 
 UPLOAD_DIR = "data"
@@ -39,11 +40,12 @@ def main():
             with st.spinner("processing"):
                 # get pdf text
                 raw_text = get_pdf_text()
-                st.write(raw_text)
+                #st.write(raw_text)
                 
 
                 #get the chucks
-               # text_chunks = splitter_text(raw_text)
+                text_chunks = text_spliter(raw_text)
+                st.write(text_chunks)
 
 
                 # create vector store
