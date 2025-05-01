@@ -1,6 +1,7 @@
 import streamlit as st
 import os 
 import shutil
+from src.loader import get_pdf_text
 
 # Define the folder where PDFs will be stored 
 UPLOAD_DIR = "data"
@@ -35,9 +36,21 @@ def main():
             clear_upload_pdf() # clearn previous pdf
             save_uploaded_pdfs(uploaded_files)
             #st.success(f"{len(uploaded_files)} file(s) uploaded and saved.")
+            with st.spinner("processing"):
+                # get pdf text
+                raw_text = get_pdf_text()
+                st.write(raw_text)
+                
 
-        # st.file_uploader("Upload your PDF here and Click on 'Process'")
-        # st.button("Process")
+                #get the chucks
+               # text_chunks = splitter_text(raw_text)
+
+
+                # create vector store
+               # vector_store = get_embedding_vector(text_chunks)
+
+
+
 
 if __name__ == "__main__":
     main()
