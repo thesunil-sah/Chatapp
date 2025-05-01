@@ -6,6 +6,7 @@ from src.text_spliter import text_spliter
 from src.vector_store import get_vectorstore
 from src.retriever import get_retriever
 from src.llm import get_conversation_chain
+from src.template import css, bot_template,user_template
 # Define the folder where PDFs will be stored 
 UPLOAD_DIR = "data"
 
@@ -27,7 +28,7 @@ def save_uploaded_pdfs(uploaded_files):
 
 def main():
     st.set_page_config(page_title="Chat With Multiple PDFs", page_icon=":books:")
-    
+    st.write(css,unsafe_allow_html=True)
     st.header("Chat with multiple PDFs :books:")
     user_question = st.text_input("Ask a question about your documents:")
     if user_question and st.session_state.conversation:
@@ -36,16 +37,16 @@ def main():
 
         for i,msg in enumerate(st.session_state.chat_history):
             if i %2 ==0:
-                st.markdown(f"**YOU:** {msg.content}")
+                st.write(user_template.replace("{{MSG}}", msg.content), unsafe_allow_html=True)
             else:
-                st.markdown(f"**Bot:** {msg.content}")
+                st.write(bot_template.replace("{{MSG}}", msg.content), unsafe_allow_html=True)
 
 
     with st.sidebar:
         st.subheader("Your Documents")
         uploaded_files = st.file_uploader("upload your PDFs", type=["pdf"], accept_multiple_files=True)
 
-        if st.button("process") and uploaded_files:
+        if st.button("Train Your Model") and uploaded_files:
             clear_upload_pdf() # clearn previous pdf
             save_uploaded_pdfs(uploaded_files)
             #st.success(f"{len(uploaded_files)} file(s) uploaded and saved.")
@@ -57,7 +58,7 @@ def main():
 
                 #get the chucks
                 text_chunks = text_spliter(raw_text)
-                st.write(text_chunks)
+                #st.write(text_chunks)
 
 
                 # generate vector store

@@ -24,21 +24,49 @@ css = '''
   color: #fff;
 }
 '''
+import base64
+from pathlib import Path
 
-bot_template = '''
+def encode_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+bot_img = encode_image("assets/bot.png")
+human_img = encode_image("assets/human.png")
+
+bot_template = f'''
 <div class="chat-message bot">
     <div class="avatar">
-        <img src="https://i.ibb.co/cN0nmSj/Screenshot-2023-05-28-at-02-37-21.png">
+        <img src="data:image/png;base64,{bot_img}">
     </div>
-    <div class="message">{{MSG}}</div>
+    <div class="message">{{{{MSG}}}}</div>
 </div>
 '''
 
-user_template = '''
+user_template = f'''
 <div class="chat-message user">
     <div class="avatar">
-        <img src="https://i.ibb.co/rdZC7LZ/Photo-logo-1.png">
+        <img src="data:image/png;base64,{human_img}">
     </div>    
-    <div class="message">{{MSG}}</div>
+    <div class="message">{{{{MSG}}}}</div>
 </div>
 '''
+
+
+# bot_template = '''
+# <div class="chat-message bot">
+#     <div class="avatar">
+#         <img src="../assets/bot.png">
+#     </div>
+#     <div class="message">{{MSG}}</div>
+# </div>
+# '''
+
+# user_template = '''
+# <div class="chat-message user">
+#     <div class="avatar">
+#         <img src="../assets/human.png">
+#     </div>    
+#     <div class="message">{{MSG}}</div>
+# </div>
+# '''
