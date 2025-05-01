@@ -3,6 +3,7 @@ import os
 import shutil
 from src.loader import get_pdf_text
 from src.text_spliter import text_spliter
+from src.vector_store import get_vectorstore
 
 # Define the folder where PDFs will be stored 
 UPLOAD_DIR = "data"
@@ -49,7 +50,7 @@ def main():
 
 
                 # create vector store
-               # vector_store = get_embedding_vector(text_chunks)
+                vectorstore = get_vectorstore(text_chunks)
 
 
 
